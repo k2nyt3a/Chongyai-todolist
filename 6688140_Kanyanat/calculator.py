@@ -73,6 +73,11 @@ def calculator():
         except Exception as e:
             print(f"An error occurred: {e}")
 
+def calculate_velocity(distance: float, time: float) -> float:
+    if time <= 0:
+        raise ValueError("Time must be greater than zero")
+    return distance / time
+
 
 if __name__ == "__main__":
     calculator()
