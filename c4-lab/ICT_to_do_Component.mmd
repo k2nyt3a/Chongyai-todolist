@@ -1,0 +1,28 @@
+C4Component
+    title ICT To Do List System - Web API Component Diagram
+
+    Container_Boundary(web_api, "Web API") {
+        Component(auth_component, "Authentication & Authorization", "Python Module", "Handles login, token validation, and access control checks")
+        Component(task_mgmt_component, "Task Management", "Python Module", "Handles CRUD operations for manual and imported tasks")
+        Component(sync_orchestrator, "MyCourses Sync Orchestrator", "Python Module", "Manages sync workflow and decides when to call external services")
+        Component(mycourses_client, "MyCourses Client", "Python Module", "Calls MyCourses web services and handles HTTPS requests and JSON parsing")
+        Component(mapping_component, "Mapping", "Python Module", "Converts MyCourses assignment and submission data into internal task model")
+        Component(sync_history_component, "Sync History", "Python Module", "Records sync outcomes and provides data for admin monitoring")
+        Component(data_access_component, "Data Access", "Python Module", "Provides repository functions for PostgreSQL access and transaction management")
+    }
+
+    Container_Ext(database, "Database", "PostgreSQL")
+    Container_Ext(mycourses_connector, "MyCourses Connector", "Python Service Module")
+
+    Rel(auth_component, data_access_component, "Uses")
+    Rel(task_mgmt_component, data_access_component, "Reads/writes tasks via")
+    Rel(task_mgmt_component, auth_component, "Uses for access control")
+    
+    Rel(sync_orchestrator, task_mgmt_component, "Updates tasks via")
+    Rel(sync_orchestrator, mapping_component, "Uses to map data")
+    Rel(sync_orchestrator, mycourses_client, "Calls to retrieve data")
+    Rel(sync_orchestrator, sync_history_component, "Records sync results to")
+    
+    Rel(mycourses_client, mycourses_connector, "Calls external service")
+    
+    Rel(data_access_component, database, "Reads/writes to", "SQL via ORM")
