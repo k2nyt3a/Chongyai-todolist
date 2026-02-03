@@ -1,0 +1,29 @@
+C4Container
+    title ICT To Do List System - Container Diagram
+
+    Person(student, "Student", "Manages personal tasks and tracks course assignments")
+    Person(instructor, "Instructor", "Views teaching-related tasks and assignment deadlines")
+    Person(admin, "System Administrator", "Manages system configuration and monitors sync health")
+
+    System_Boundary(ict_system, "ICT To Do List System") {
+        Container(web_app, "Web App", "React SPA", "Provides task management interface for students and instructors via web browser")
+        Container(mobile_app, "Mobile App", "Flutter", "Provides task management interface for students via iOS and Android")
+        Container(web_api, "Web API", "Python FastAPI", "Provides REST API endpoints for task and sync operations")
+        Container(database, "Database", "PostgreSQL", "Stores user profiles, tasks, sync settings, and sync history")
+        Container(mycourses_connector, "MyCourses Connector", "Python Service Module", "Integrates with MyCourses to retrieve courses, assignments, and submission status")
+    }
+
+    System_Ext(mycourses, "MyCourses", "External ICT e-learning system that owns course and assignment data")
+
+    Rel(student, web_app, "Uses via browser")
+    Rel(student, mobile_app, "Uses via mobile device")
+    Rel(instructor, web_app, "Uses via browser")
+    Rel(admin, web_app, "Uses via admin interface")
+
+    Rel(web_app, web_api, "Makes API calls to", "HTTPS/JSON")
+    Rel(mobile_app, web_api, "Makes API calls to", "HTTPS/JSON")
+    
+    Rel(web_api, database, "Reads/writes data to", "SQL via ORM")
+    Rel(web_api, mycourses_connector, "Calls to sync data", "Internal interface")
+    
+    Rel(mycourses_connector, mycourses, "Retrieves course and assignment data from", "HTTPS/JSON")
